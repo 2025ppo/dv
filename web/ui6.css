@@ -494,3 +494,129 @@ body:has(#moduleWeather:not([hidden])) .site-header { background: rgba(8,10,14,.
 .star-quick { padding: 7px 8px; }
 .star-quick b { font-size: 13px; letter-spacing: 0; }
 .star-quick span { font-size: 10px; letter-spacing: .04em; }
+
+/* ============================================================
+   v7 手机端重排: 时间 / 日历 的挤压与重叠
+   ============================================================ */
+@media (max-width: 760px) {
+  .page { padding: 8px 14px 28px; }
+  .module-head { padding: 2px 0 14px; gap: 12px; }
+  .module-heading h1 { font-size: 26px !important; }
+  .panel { padding: 18px 16px !important; border-radius: 18px !important; }
+  #moduleWeather { padding-left: 14px; padding-right: 14px; }
+
+  /* 时间: 行星缩为角标, 数字不再被压住 */
+  .time-panel::after { width: 84px !important; height: 84px !important; right: 12px !important; top: 58px !important; opacity: .55 !important; }
+  .time-panel .time-grid { grid-template-columns: 1fr !important; gap: 18px !important; }
+  .time-big { font-size: clamp(42px, 12.5vw, 54px) !important; letter-spacing: 0 !important; }
+  .time-date { margin: 12px 0 0 !important; font-size: 14px !important; line-height: 1.7 !important; max-width: 26ch; }
+  .standard-line { margin-top: 16px; padding: 12px 14px; background: var(--paper-2); border-radius: 10px; }
+  .standard-line b { font-size: 19px !important; }
+  .standard-line small { font-size: 12px !important; }
+  .time-site {
+    display: grid !important; grid-template-columns: 1fr 1fr;
+    gap: 18px 14px !important; border-top: 1px solid var(--line) !important;
+    padding: 18px 0 0 !important; align-items: start;
+  }
+  .site-field { gap: 4px; }
+  .site-field b { font-size: 16px !important; line-height: 1.45; }
+  .site-field small { font-size: 12px !important; line-height: 1.6; }
+  .site-field:last-child { grid-column: 1 / -1; }
+  .time-panel .metric-row, .calendar-summary .metric-row {
+    gap: 16px 14px; background: var(--paper-2); border-radius: 12px;
+    padding: 16px 14px !important; border-top: none !important;
+  }
+  .time-panel .metric, .calendar-summary .metric { padding: 0 !important; }
+  .time-panel .metric + .metric, .calendar-summary .metric + .metric { padding-left: 0 !important; border-left: none !important; }
+  .time-panel .metric b, .calendar-summary .metric b { font-size: 16px !important; }
+  .time-panel .metric small, .calendar-summary .metric small { font-size: 12px !important; line-height: 1.5; }
+  .time-table .time-row { padding: 14px 0 !important; row-gap: 4px; }
+  .time-row .world { grid-column: 1 / -1; font-size: 15px !important; }
+  .time-row .std, .time-row .local { font-size: 15px !important; }
+  .time-row .note { font-size: 12px !important; }
+
+  /* 日历: 导航独占一行, 不再竖排压住标题 */
+  .calendar-summary::after { width: 96px !important; height: 96px !important; right: 10px !important; top: 52px !important; opacity: .5 !important; }
+  .calendar-date-big { font-size: clamp(38px, 11vw, 52px) !important; }
+  .calendar-date-sub { margin-top: 12px !important; font-size: 14px !important; line-height: 1.7 !important; max-width: 26ch; }
+  .calendar-panel-head { flex-wrap: wrap; align-items: center; }
+  .cal-nav { flex: 0 0 100%; justify-content: flex-end; margin-top: 12px; }
+  .cal-nav .icon-btn, .cal-nav .btn { width: 44px !important; height: 44px !important; min-height: 44px !important; padding: 0 !important; border-radius: 50% !important; }
+  .calendar-panel { padding: 16px 14px !important; }
+  .calendar-panel .grid-heading { margin-bottom: 10px; }
+  .day-cell { min-height: 54px !important; padding: 6px !important; }
+  .moon-cell, .mars-cell { min-height: 56px !important; padding: 6px !important; }
+  .cal-note { font-size: 12px !important; }
+
+  /* 天气: 呼吸感 */
+  .weather-site { margin-bottom: 10px; }
+  .weather-panel .metric-row { padding-top: 20px; }
+  .weather-metric { font-size: clamp(84px, 24vw, 116px) !important; }
+  .idx-card { padding: 16px 16px 14px; min-height: 156px; }
+}
+
+/* ============================================================
+   v7.1 去重与压缩: 只保留一个地点入口; 手机头部收至 ~96px
+   ============================================================ */
+
+/* 每模块自带的 世界/站点 下拉与全局星图重复 → 全部隐藏 */
+.module-controls { display: none !important; }
+
+/* 去掉 AI 仪表盘式的英文小标与假公报行 */
+.kicker, .module-meta, .header-top { display: none !important; }
+.module-head { padding: 10px 0 16px; }
+.module-heading h1 { font-size: clamp(26px, 3vw, 34px) !important; }
+
+/* 日历导航恢复横排 */
+.cal-nav { flex-direction: row !important; align-items: center; gap: 8px !important; }
+
+@media (max-width: 760px) {
+  /* 顶栏压缩: 一行品牌+地点, 一行模块 */
+  .site-header { padding: 6px 12px 2px; }
+  .header-main {
+    display: flex !important; align-items: center; flex-wrap: nowrap !important;
+    gap: 8px; padding: 2px 0 6px !important;
+  }
+  .brand { flex: 0 0 auto; gap: 7px; }
+  .emblem { width: 26px !important; height: 26px !important; }
+  .brand-copy { line-height: 1.1; }
+  .brand-copy small, .brand-copy em { display: none !important; }
+  .brand-copy strong { font-size: 17px !important; letter-spacing: .05em; }
+  .header-clock { display: none !important; }
+  .header-actions { flex: 1 1 auto; justify-content: flex-end; gap: 5px; min-width: 0; margin-left: auto; }
+  #locationChip {
+    flex: 0 1 auto; min-width: 0; max-width: 168px;
+    min-height: 36px !important; padding: 0 10px !important;
+    border-radius: 999px !important; background: var(--paper) !important;
+    color: var(--ink) !important; border: 1px solid var(--line) !important;
+  }
+  #locationChip .loc-icon { width: 22px; height: 22px; }
+  #locationChip .loc-copy small { display: none; }
+  #locationChip .loc-copy b { font-size: 13px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 108px; }
+  #locationChip .loc-chev { display: none; }
+  .header-actions .icon-btn { width: 36px !important; height: 36px !important; min-height: 36px !important; }
+  .module-nav { gap: 6px; padding: 2px 0 0; }
+  .module-tab { min-height: 38px !important; padding: 0 18px !important; }
+  .module-tab .name { font-size: 15px !important; }
+
+  .module-head { padding: 8px 0 12px !important; }
+  .module-heading h1 { font-size: 22px !important; line-height: 1.25; }
+  .module-heading > p { display: none !important; }
+
+  .time-date { max-width: none !important; }
+  .calendar-date-sub { max-width: none !important; }
+  .cal-nav { flex: 0 0 auto !important; margin-top: 0 !important; margin-left: auto; }
+}
+
+/* v7.2 手机细节: 节日只留标记, 天气 chips 2x2 */
+@media (max-width: 760px) {
+  .dfeast { display: none !important; }
+  .day-cell:has(.dfeast) .dnum::after { content: ""; display: inline-block; width: 4px; height: 4px; margin-left: 4px; border-radius: 50%; background: var(--accent); vertical-align: middle; }
+  .weather-panel .metric-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .weather-panel .metric { padding: 10px 14px !important; justify-content: flex-start; }
+  .weather-panel .metric + .metric { border-left: 1px solid rgba(255,255,255,.28) !important; padding-left: 14px !important; }
+  .weather-panel .metric b { font-size: 16px !important; }
+  .weather-panel .metric span { font-size: 13px !important; }
+}
+@media (max-width: 760px) { .mfest { display: none !important; } .day-cell:has(.mfest) .mnum::after { content: ""; display: inline-block; width: 4px; height: 4px; margin-left: 4px; border-radius: 50%; background: var(--accent); vertical-align: middle; } }
+@media (max-width: 760px) { .weather-panel .metric:nth-child(4) { grid-column: 1 / -1; } .weather-panel .metric span, .weather-panel .metric b { white-space: nowrap; } }
