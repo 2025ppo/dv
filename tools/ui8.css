@@ -1,0 +1,53 @@
+
+/* ============================================================
+   v7.1 去重与压缩: 只保留一个地点入口; 手机头部收至 ~96px
+   ============================================================ */
+
+/* 每模块自带的 世界/站点 下拉与全局星图重复 → 全部隐藏 */
+.module-controls { display: none !important; }
+
+/* 去掉 AI 仪表盘式的英文小标与假公报行 */
+.kicker, .module-meta, .header-top { display: none !important; }
+.module-head { padding: 10px 0 16px; }
+.module-heading h1 { font-size: clamp(26px, 3vw, 34px) !important; }
+
+/* 日历导航恢复横排 */
+.cal-nav { flex-direction: row !important; align-items: center; gap: 8px !important; }
+
+@media (max-width: 760px) {
+  /* 顶栏压缩: 一行品牌+地点, 一行模块 */
+  .site-header { padding: 6px 12px 2px; }
+  .header-main {
+    display: flex !important; align-items: center; flex-wrap: nowrap !important;
+    gap: 8px; padding: 2px 0 6px !important;
+  }
+  .brand { flex: 0 0 auto; gap: 7px; }
+  .emblem { width: 26px !important; height: 26px !important; }
+  .brand-copy { line-height: 1.1; }
+  .brand-copy small, .brand-copy em { display: none !important; }
+  .brand-copy strong { font-size: 17px !important; letter-spacing: .05em; }
+  .header-clock { display: none !important; }
+  .header-actions { flex: 1 1 auto; justify-content: flex-end; gap: 5px; min-width: 0; margin-left: auto; }
+  #locationChip {
+    flex: 0 1 auto; min-width: 0; max-width: 168px;
+    min-height: 36px !important; padding: 0 10px !important;
+    border-radius: 999px !important; background: var(--paper) !important;
+    color: var(--ink) !important; border: 1px solid var(--line) !important;
+  }
+  #locationChip .loc-icon { width: 22px; height: 22px; }
+  #locationChip .loc-copy small { display: none; }
+  #locationChip .loc-copy b { font-size: 13px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 108px; }
+  #locationChip .loc-chev { display: none; }
+  .header-actions .icon-btn { width: 36px !important; height: 36px !important; min-height: 36px !important; }
+  .module-nav { gap: 6px; padding: 2px 0 0; }
+  .module-tab { min-height: 38px !important; padding: 0 18px !important; }
+  .module-tab .name { font-size: 15px !important; }
+
+  .module-head { padding: 8px 0 12px !important; }
+  .module-heading h1 { font-size: 22px !important; line-height: 1.25; }
+  .module-heading > p { display: none !important; }
+
+  .time-date { max-width: none !important; }
+  .calendar-date-sub { max-width: none !important; }
+  .cal-nav { flex: 0 0 auto !important; margin-top: 0 !important; margin-left: auto; }
+}
