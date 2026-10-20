@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>宇宙日历 · 太阳系历务与气象总署</title>
+  <meta name="description" content="太阳系历务与气象总署公开服务：地球、月球、火星的标准时间、历法与站点环境公报。">
+  <meta name="theme-color" content="#f2eee5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b141d" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ui6.css">
+  <script>
+    (function () {
+      try {
+        var raw = localStorage.getItem('cosmic-almanac-v4');
+        var p = raw ? JSON.parse(raw) : {};
+        var t = p.theme || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = t;
+      } catch (e) { document.documentElement.dataset.theme = 'light'; }
+    })();
+  </script>
+</head>
+<body>
+  <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-earth" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5"/>
+      <path d="M3.8 10.4c2.1-.8 3.7.1 4.7 1.3 1.1 1.3.8 2.8 2.1 3.7 1.2.8 2.7.4 3.7 1.5.8 1 .5 2.2-.1 3.2"/>
+      <path d="M14.3 3.9c-.5 1.8.4 3.1 2 3.8 1.3.6 2.7.1 3.7 1.2"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24">
+      <path d="M20.2 14.3A8.7 8.7 0 0 1 9.7 3.8a8.9 8.9 0 1 0 10.5 10.5Z"/>
+    </symbol>
+    <symbol id="i-mars" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="6.3"/>
+      <ellipse cx="12" cy="12" rx="10" ry="3.6" transform="rotate(-28 12 12)"/>
+      <path d="M8.8 6.3c1.5-.5 2.9-.3 4.1.4"/>
+      <circle cx="20" cy="6.2" r="1.1" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-galaxy" viewBox="0 0 24 24">
+      <path d="M12 12c2.9-1.4 6 .2 6 3.1 0 3.4-3.8 5.4-6.9 4.1-3.9-1.7-4.9-6.4-2.3-9.6 2.9-3.5 8.6-3.2 10.9.4"/>
+      <path d="M12 12C9.1 13.4 6 11.8 6 8.9c0-3.4 3.8-5.4 6.9-4.1"/>
+      <circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-cosmos" viewBox="0 0 24 24">
+      <path d="M12 2.8l1.55 6.65L20.2 11l-6.65 1.55L12 19.2l-1.55-6.65L3.8 11l6.65-1.55L12 2.8Z"/>
+      <circle cx="19.4" cy="4.7" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="4.6" cy="19.1" r="0.85" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4.1"/>
+      <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/>
+    </symbol>
+    <symbol id="i-theme-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3.8"/>
+      <path d="M12 2.8v2M12 19.2v2M2.8 12h2M19.2 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/>
+    </symbol>
+    <symbol id="i-theme-moon" viewBox="0 0 24 24">
+      <path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.6 8.6 0 1 0 10.4 10.4Z"/>
+    </symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24">
+      <path d="M12 3a9 9 0 1 0 0 18h1.1a2 2 0 0 0 .4-3.96 1.8 1.8 0 0 1 1.1-3.4H18a3 3 0 0 0 3-3A9 9 0 0 0 12 3Z"/>
+      <circle cx="7.8" cy="10" r="1.15" fill="currentColor" stroke="none"/>
+      <circle cx="11" cy="6.9" r="1.15" fill="currentColor" stroke="none"/>
+      <circle cx="15.4" cy="7.9" r="1.15" fill="currentColor" stroke="none"/>
+      <circle cx="7.6" cy="14.3" r="1.15" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 10.8v5.5"/>
+      <circle cx="12" cy="7.7" r="1.05" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-close" viewBox="0 0 24 24">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9.5 5.5L16 12l-6.5 6.5"/></symbol>
+    <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17L17 7M8.5 7H17v8.5"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24">
+      <path d="M19.2 9.2A7.8 7.8 0 1 0 20 14"/>
+      <path d="M19.6 4.7v4.8h-4.8"/>
+    </symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24">
+      <path d="M12 21s6.5-5.2 6.5-11a6.5 6.5 0 1 0-13 0C5.5 15.8 12 21 12 21Z"/>
+      <circle cx="12" cy="10" r="2.2"/>
+    </symbol>
+    <symbol id="i-wind" viewBox="0 0 24 24">
+      <path d="M3.5 8.5h10.2a2.6 2.6 0 1 0-2.5-3.3"/>
+      <path d="M3.5 12.2h14.2a2.4 2.4 0 1 1-2.3 3"/>
+      <path d="M3.5 15.9h6.2"/>
+    </symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24">
+      <path d="M12 3.2c3.1 3.7 5.5 6.8 5.5 9.6a5.5 5.5 0 0 1-11 0c0-2.8 2.4-5.9 5.5-9.6Z"/>
+    </symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24">
+      <path d="M4 17.5a8.5 8.5 0 1 1 16 0"/>
+      <path d="M12 17.5l3.8-5.1"/>
+      <circle cx="12" cy="17.5" r="1.3" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-thermo" viewBox="0 0 24 24">
+      <path d="M9.5 14.2V5.7a2.5 2.5 0 0 1 5 0v8.5a4.6 4.6 0 1 1-5 0Z"/>
+      <path d="M12 8.5v7.2"/>
+    </symbol>
+    <symbol id="i-sunrise" viewBox="0 0 24 24">
+      <path d="M3 17h18M6.5 17a5.5 5.5 0 0 1 11 0"/>
+      <path d="M12 3.5v4M5.5 7l1.3 1.3M18.5 7l-1.3 1.3M2.8 20.5h18.4"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="10.8" cy="10.8" r="6.8"/>
+      <path d="M16 16l4.2 4.2"/>
+    </symbol>
+    <symbol id="i-locate" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2.6v3M12 18.4v3M2.6 12h3M18.4 12h3"/>
+      <circle cx="12" cy="12" r="8.3"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M5.5 9l6.5 6.5L18.5 9"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24">
+      <rect x="3.8" y="5.2" width="16.4" height="15" rx="2.5"/>
+      <path d="M3.8 9.6h16.4M8.2 3.5v3.3M15.8 3.5v3.3"/>
+      <circle cx="8.5" cy="13.5" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="13.5" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="15.5" cy="13.5" r="1" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.7"/>
+      <path d="M12 7.2v5.3l3.4 2"/>
+    </symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24">
+      <path d="M12 3.5l1.7 6.8 6.8 1.7-6.8 1.7L12 20.5l-1.7-6.8L3.5 12l6.8-1.7L12 3.5Z"/>
+    </symbol>
+    <symbol id="i-wx-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2.8v2.2M12 19v2.2M2.8 12H5M19 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4L17 7M7 17l-1.6 1.6"/>
+    </symbol>
+    <symbol id="i-wx-moon" viewBox="0 0 24 24">
+      <path d="M19.7 14.6A8.2 8.2 0 0 1 9.4 4.3a8.5 8.5 0 1 0 10.3 10.3Z"/>
+    </symbol>
+    <symbol id="i-wx-partly" viewBox="0 0 24 24">
+      <circle cx="9" cy="8.5" r="3.1"/>
+      <path d="M9 2.8v1.6M3.3 8.5h1.6M5 4.5l1.1 1.1M13 4.5l-1.1 1.1"/>
+      <path d="M7.2 19h9.7a3.6 3.6 0 0 0 .2-7.2 5.6 5.6 0 0 0-5.3-4.1 5.2 5.2 0 0 0-4.6 2.7 4.2 4.2 0 0 0 0 8.6Z"/>
+    </symbol>
+    <symbol id="i-wx-cloud" viewBox="0 0 24 24">
+      <path d="M7.1 19h9.8a3.7 3.7 0 0 0 .2-7.4 5.9 5.9 0 0 0-11.2-1.1A4.3 4.3 0 0 0 7.1 19Z"/>
+    </symbol>
+    <symbol id="i-wx-fog" viewBox="0 0 24 24">
+      <path d="M7.1 15.5h9.8a3.5 3.5 0 0 0 .1-7 5.6 5.6 0 0 0-10.7-1 4.1 4.1 0 0 0 .8 8Z"/>
+      <path d="M4 19h11M8 21.3h9.5"/>
+    </symbol>
+    <symbol id="i-wx-drizzle" viewBox="0 0 24 24">
+      <path d="M7.1 14.8h9.8a3.6 3.6 0 0 0 .2-7.2A5.7 5.7 0 0 0 6 6.7a4.1 4.1 0 0 0 1.1 8.1Z"/>
+      <path d="M8.5 18l-.8 2.2M12 18l-.8 2.2M15.5 18l-.8 2.2"/>
+    </symbol>
+    <symbol id="i-wx-rain" viewBox="0 0 24 24">
+      <path d="M7.1 14.3h9.8a3.6 3.6 0 0 0 .2-7.2A5.7 5.7 0 0 0 6 6.2a4.1 4.1 0 0 0 1.1 8.1Z"/>
+      <path d="M8 17.3l-1.4 3.4M12.8 17.3l-1.4 3.4M17 17.3l-1.4 3.4"/>
+    </symbol>
+    <symbol id="i-wx-snow" viewBox="0 0 24 24">
+      <path d="M7.1 14.3h9.8a3.6 3.6 0 0 0 .2-7.2A5.7 5.7 0 0 0 6 6.2a4.1 4.1 0 0 0 1.1 8.1Z"/>
+      <path d="M8 18v3M6.7 18.7l2.6 1.6M9.3 18.7l-2.6 1.6M16 18v3M14.7 18.7l2.6 1.6M17.3 18.7l-2.6 1.6"/>
+    </symbol>
+    <symbol id="i-wx-thunder" viewBox="0 0 24 24">
+      <path d="M7.1 14h9.8a3.6 3.6 0 0 0 .2-7.2A5.7 5.7 0 0 0 6 5.9 4.1 4.1 0 0 0 7.1 14Z"/>
+      <path d="M12.8 15.4l-2 4h2.8l-1.5 3.2"/>
+    </symbol>
+    <symbol id="i-satellite" viewBox="0 0 24 24">
+      <path d="M14 4.5l5.5 5.5M16.2 2.3l5.5 5.5M13.1 5.4l5.5 5.5-4.2 4.2-5.5-5.5 4.2-4.2Z"/>
+      <path d="M9.4 14.6a4.4 4.4 0 0 0 5.2 5.2M4.5 19.5l4-4M3 21l1.5-1.5"/>
+    </symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24">
+      <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/>
+    </symbol>
+    <symbol id="i-send" viewBox="0 0 24 24">
+      <path d="M3.8 11.6L20.2 4l-4.6 16.2-3.4-6.2-8.4-2.4Z"/>
+      <path d="M12.2 13.8l4-4"/>
+    </symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24">
+      <path d="M12 3.6l8.6 16.1H3.4L12 3.6Z"/>
+      <path d="M12 9v5.2"/>
+      <circle cx="12" cy="17.1" r="1" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-air" viewBox="0 0 24 24">
+      <path d="M3.5 8.2h10a2.4 2.4 0 1 0-2.3-3.1"/>
+      <path d="M3.5 12h14a2.2 2.2 0 1 1-2.1 2.8"/>
+      <path d="M3.5 15.8h6.2"/>
+    </symbol>
+  </svg>
+  <div class="backdrop" aria-hidden="true">
+    <div class="bg bg-light"></div>
+    <div class="bg bg-dark"></div>
+    <div class="bg-veil"></div>
+    <div class="bg-grain"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="header-top">
+      <span class="header-agency"><span class="status-dot"></span>SSCMA · PUBLIC SERVICE</span>
+      <span class="header-serial">公报编号 SSCMA-PB-2026-1020 · 第 3 版</span>
+    </div>
+    <div class="header-main">
+      <a class="brand" href="./" aria-label="宇宙日历首页">
+        <span class="emblem" aria-hidden="true">
+          <svg viewBox="0 0 52 52">
+            <circle cx="26" cy="26" r="22" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
+            <circle cx="26" cy="26" r="17" fill="none" stroke="currentColor" stroke-width=".7" opacity=".35"/>
+            <ellipse cx="26" cy="26" rx="22" ry="7.8" transform="rotate(-24 26 26)" fill="none" stroke="currentColor" stroke-width="1.1"/>
+            <ellipse cx="26" cy="26" rx="15" ry="5" transform="rotate(34 26 26)" fill="none" stroke="currentColor" stroke-width=".7" opacity=".7"/>
+            <circle cx="26" cy="26" r="4.2" fill="currentColor"/>
+            <circle cx="43.6" cy="15.3" r="2.2" fill="currentColor"/>
+            <circle cx="10.7" cy="36" r="1.6" fill="currentColor"/>
+            <path d="M26 4v5M26 43v5M4 26h5M43 26h5" stroke="currentColor" stroke-width=".8" opacity=".5"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <small>太阳系历务与气象总署</small>
+          <strong>宇宙日历</strong>
+          <em>行星时间 · 历法 · 环境公报</em>
+        </span>
+      </a>
+      <div class="header-clock">
+        <span class="label">标准时 · 北京时间 UTC+8</span>
+        <time id="headerClock">--:--:--</time>
+        <span id="headerDate">正在校时…</span>
+      </div>
+      <div class="header-actions">
+        <button class="location-chip" id="locationChip" type="button" aria-haspopup="dialog" aria-controls="starDialog">
+          <span class="loc-icon" id="locIcon"><svg class="icon"><use href="#i-mars"/></svg></span>
+          <span class="loc-copy"><small>地点</small><b id="locName">火星 · 杰泽罗站</b></span>
+          <span class="loc-chev"><svg class="icon"><use href="#i-right"/></svg></span>
+        </button>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+          <svg class="icon theme-icon-sun"><use href="#i-theme-sun"/></svg>
+          <svg class="icon theme-icon-moon"><use href="#i-theme-moon"/></svg>
+        </button>
+        <button class="icon-btn" id="infoBtn" type="button" aria-label="数据与方法说明" title="数据与方法说明">
+          <svg class="icon"><use href="#i-info"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav class="module-nav" id="moduleNav" role="tablist" aria-label="选择公报模块">
+      <button class="module-tab" role="tab" data-module="time" aria-selected="false"><span class="num">01</span><span class="name">时间</span><small>PLANETARY TIME</small></button>
+      <button class="module-tab" role="tab" data-module="calendar" aria-selected="true"><span class="num">02</span><span class="name">日历</span><small>CALENDARS</small></button>
+      <button class="module-tab" role="tab" data-module="weather" aria-selected="false"><span class="num">03</span><span class="name">气象</span><small>ENVIRONMENT</small></button>
+    </nav>
+  </header>
+
+  <main class="page">
+    <section class="module" id="moduleTime" data-module-panel="time" hidden>
+      <header class="module-head">
+        <div class="module-heading">
+          <p class="kicker">01 / PLANETARY TIME</p>
+          <h1>不同世界的标准时间</h1>
+          <p>同一个瞬间，在地球、月球与火星有不同的标准。选择世界与站点，读数由公开天文数据和站点坐标计算。</p>
+        </div>
+        <div class="module-controls">
+          <label class="field"><span>世界</span><select id="timeWorld"><option value="earth">地球</option><option value="moon">月球</option><option value="mars">火星</option></select></label>
+          <label class="field"><span>站点</span><select id="timeSite"></select></label>
+        </div>
+      </header>
+      <div class="module-meta"><span id="timeMetaLeft">SSCMA / 行星时间司</span><span>站点读数每 1 秒更新 · 标准时口径见说明</span></div>
+
+      <div class="layout-primary">
+        <article class="panel time-panel">
+          <header class="panel-head"><span>站点读数 / SITE READING</span><span class="tag" id="timeModeTag">实时</span></header>
+          <div class="time-grid">
+            <div class="time-main">
+              <p class="eyebrow" id="timeWorldLabel">地球 · 站点真太阳时</p>
+              <div class="time-big" id="timeLocal">--:--:--</div>
+              <p class="time-date" id="timeLocalDate">正在读取…</p>
+              <div class="standard-line"><span>标准时</span><b id="timeStandard">--:--:--</b><small id="timeStandardLabel">北京时间 UTC+8</small></div>
+            </div>
+            <div class="time-site">
+              <div class="site-field"><span>当前站点</span><b id="timeSiteName">—</b><small id="timeSiteCode">—</small></div>
+              <div class="site-field"><span>坐标</span><b id="timeCoords">—</b></div>
+              <div class="site-field"><span>驻地状态</span><b id="timeSiteRole">—</b></div>
+            </div>
+          </div>
+          <div class="metric-row" id="timeFacts"></div>
+          <details class="disclosure">
+            <summary>校时 / 查看另一个时刻</summary>
+            <div class="inspector">
+              <label class="field"><span>日期（北京时间）</span><input type="date" id="timeDate"></label>
+              <label class="field"><span>时间（北京时间）</span><input type="time" id="timeClockInput" step="1"></label>
+              <button class="btn" id="timeNowBtn" type="button">回到此刻</button>
+              <span class="inspector-note" id="timeInspectorNote">当前为实时读数。</span>
+            </div>
+          </details>
+        </article>
+
+        <article class="panel map-panel">
+          <header class="panel-head"><span>站点地图 / SITE MAP</span><span class="panel-credit" id="timeMapCredit">NASA</span></header>
+          <div class="planet-map" id="timeMap">
+            <div class="map-grid" aria-hidden="true"></div>
+            <div class="map-markers" id="timeMapMarkers"></div>
+            <span class="map-coord nw">180°W</span><span class="map-coord ne">180°E</span><span class="map-coord sw">90°S</span><span class="map-coord nw2">90°N</span>
+          </div>
+          <div class="map-site" id="timeMapSite"></div>
+        </article>
+      </div>
+
+      <section class="panel standards-panel">
+        <header class="panel-head"><span>三种时间标准 / 对照</span><span class="panel-credit">STANDARD TIME REGISTERS</span></header>
+        <div class="time-table" id="timeTable"></div>
+      </section>
+
+      <section class="panel colony-panel">
+        <header class="panel-head"><span>行星常驻网络 / COLONY NETWORK</span><span class="panel-credit">概念设定</span></header>
+        <div class="colony-grid" id="colonyGrid"></div>
+      </section>
+    </section>
+
+    <section class="module" id="moduleCalendar" data-module-panel="calendar">
+      <header class="module-head">
+        <div class="module-heading">
+          <p class="kicker">02 / CALENDARS</p>
+          <h1>不同世界的日历</h1>
+          <p>地球使用公历，月球以月相周期计月，火星以太阳黄经分月。选择一套历法，或直接在地图上定位站点。</p>
+        </div>
+        <div class="module-controls">
+          <label class="field"><span>历法</span><select id="calendarSelect"><option value="earth">地球历 · 公历</option><option value="moon">月球历 · 按月相计月</option><option value="mars">火星历 · 太阳黄经分月</option></select></label>
+          <label class="field"><span>站点</span><select id="calendarSite"></select></label>
+        </div>
+      </header>
+
+      <div class="cal-type-row" id="calTypeRow" role="group" aria-label="选择历法">
+        <button type="button" data-cal="earth" aria-pressed="false"><svg class="icon"><use href="#i-earth"/></svg>地球历</button>
+        <button type="button" data-cal="moon" aria-pressed="false"><svg class="icon"><use href="#i-moon"/></svg>月球历</button>
+        <button type="button" data-cal="mars" aria-pressed="true"><svg class="icon"><use href="#i-mars"/></svg>火星历</button>
+      </div>      <div class="module-meta"><span id="calendarMetaLeft">SSCMA / 行星历法司</span><span>标准日期以各历法公报口径为准 · 站点真太阳时另行标注</span></div>
+
+      <div class="layout-primary">
+        <article class="panel calendar-summary">
+          <header class="panel-head"><span id="calendarSummaryLabel">地球历 / GREGORIAN</span><span class="tag" id="calendarTag">标准日期</span></header>
+          <div class="calendar-summary-main">
+            <p class="eyebrow" id="calendarWorldLabel">地球 · 2026</p>
+            <div class="calendar-date-big" id="calendarDateBig">--</div>
+            <p class="calendar-date-sub" id="calendarDateSub">正在读取…</p>
+          </div>
+          <div class="metric-row" id="calendarFacts"></div>
+          <details class="disclosure"><summary>历法口径与站点读数</summary><div class="method-body" id="calendarMethod"></div></details>
+        </article>
+
+        <article class="panel map-panel">
+          <header class="panel-head"><span>站点地图 / SITE MAP</span><span class="panel-credit" id="calendarMapCredit">NASA</span></header>
+          <div class="planet-map" id="calendarMap">
+            <div class="map-grid" aria-hidden="true"></div>
+            <div class="map-markers" id="calendarMapMarkers"></div>
+            <span class="map-coord nw">180°W</span><span class="map-coord ne">180°E</span><span class="map-coord sw">90°S</span><span class="map-coord nw2">90°N</span>
+          </div>
+          <div class="map-site" id="calendarMapSite"></div>
+        </article>
+      </div>
+
+      <section class="panel calendar-panel">
+        <header class="panel-head calendar-panel-head">
+          <div><span class="panel-title" id="calendarTitle">地球历 · 十月</span><small id="calendarSub">公历 · 北京时间</small></div>
+          <div class="cal-nav">
+            <button class="icon-btn" id="calendarPrev" type="button" aria-label="上一个周期"><svg class="icon"><use href="#i-left"/></svg></button>
+            <button class="btn small" id="calendarToday" type="button">今天</button>
+            <button class="icon-btn" id="calendarNext" type="button" aria-label="下一个周期"><svg class="icon"><use href="#i-right"/></svg></button>
+          </div>
+        </header>
+        <div class="calendar-body" id="calendarBody"></div>
+      </section>
+
+      <div class="layout-secondary">
+        <section class="panel holidays-panel">
+          <header class="panel-head"><span>地球节日 / 三历投影</span><button class="link-btn" id="holidayInfoBtn" type="button">说明 <svg class="icon"><use href="#i-arrow-up-right"/></svg></button></header>
+          <div class="holiday-list" id="holidayList"></div>
+        </section>
+        <section class="panel standards-note">
+          <header class="panel-head"><span>历法公报 / 口径</span><span class="panel-credit">REFERENCE</span></header>
+          <div class="note-body">
+            <p><b>地球历</b> 公历，世界通用；标准时北京时间 UTC+8。</p>
+            <p><b>月球历</b> 以新月为月初，十二个朔望月为一年；日期按北京时间编排，站点另示真太阳时。</p>
+            <p><b>火星历</b> 太阳黄经每 30° 为一个月，七个火星日为一周；标准时 MTC，站点另示当地真太阳时。</p>
+            <p class="muted">站点名称、人口与常驻网络为概念设定；行星地图、轨道与天文数据来自 NASA、USGS 与公开模型。</p>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="module" id="moduleWeather" data-module-panel="weather" hidden>
+      <header class="module-head">
+        <div class="module-heading">
+          <p class="kicker">03 / ENVIRONMENT</p>
+          <h1>落到一颗星球</h1>
+          <p>日历给出宇宙视角，气象进入具体视角。地球为实时天气，月球为月面环境，火星为站点气候模型与实测校核。</p>
+        </div>
+        <div class="module-controls">
+          <label class="field"><span>世界</span><select id="weatherWorld"><option value="earth">地球</option><option value="moon">月球</option><option value="mars">火星</option></select></label>
+          <label class="field"><span>站点</span><select id="weatherSite"></select></label>
+          <button class="icon-btn" id="weatherRefresh" type="button" aria-label="刷新观测" title="刷新观测"><svg class="icon"><use href="#i-refresh"/></svg></button>
+        </div>
+      </header>
+      <div class="module-meta"><span id="weatherMetaLeft">SSCMA / 行星环境中心</span><span id="weatherMetaRight">正在连接观测源…</span></div>
+
+      <div class="layout-primary">
+        <article class="panel weather-panel">
+          <header class="panel-head"><span>站点观测 / SITE OBSERVATION</span><span class="tag" id="weatherMode">—</span></header>
+          <div class="weather-top">
+            <div class="weather-main">
+              <p class="eyebrow" id="weatherWorldLabel">地球 · 站点天气</p>
+              <div class="weather-metric"><span id="weatherMetric">--</span><small id="weatherUnit">°C</small></div>
+              <p class="weather-condition" id="weatherCondition">正在读取…</p>
+              <p class="weather-range" id="weatherRange">—</p>
+            </div>
+            <div class="weather-site">
+              <span class="label">站点</span><b id="weatherSiteName">—</b><small id="weatherSiteCode">—</small>
+              <span class="weather-site-line" id="weatherLocal">—</span>
+            </div>
+          </div>
+          <div class="metric-row" id="weatherFacts"></div>
+          <div class="weather-alert" id="weatherAlert"></div>
+          <details class="disclosure" id="weatherForecastWrap"><summary id="weatherForecastSummary">未来 4 天</summary><div id="weatherForecast"></div></details>
+          <p class="source-line" id="weatherSource">—</p>
+        </article>
+
+        <article class="panel map-panel">
+          <header class="panel-head"><span>站点地图 / SITE MAP</span><span class="panel-credit" id="weatherMapCredit">NASA</span></header>
+          <div class="planet-map" id="weatherMap">
+            <div class="map-grid" aria-hidden="true"></div>
+            <div class="map-markers" id="weatherMapMarkers"></div>
+            <span class="map-coord nw">180°W</span><span class="map-coord ne">180°E</span><span class="map-coord sw">90°S</span><span class="map-coord nw2">90°N</span>
+          </div>
+          <div class="map-site" id="weatherMapSite"></div>
+        </article>
+      </div>
+
+
+      <section class="panel hourly-panel" id="hourlyPanel">
+        <header class="panel-head"><span id="hourlyTitle">未来 24 小时</span><span class="panel-credit" id="hourlySub">HOURLY</span></header>
+        <div id="hourlyBody"></div>
+      </section>      <section class="panel methodology-panel">
+        <header class="panel-head"><span>观测与模型说明</span><span class="panel-credit">DATA &amp; METHOD</span></header>
+        <div class="method-grid">
+          <p><b>地球</b> 实况与五日预报来自 Open-Meteo；站点空气质量来自 Open-Meteo Air Quality。数据按站点坐标实时请求。</p>
+          <p><b>月球</b> 无大气，不适用常规天气。本站用月相、太阳高度与热平衡模型估算月面站点温度与日照，标注为“模型”。</p>
+          <p><b>火星</b> 站点温度为纬度、太阳黄经、海拔与昼夜周期的简化气候模型；埃律西昂站附 NASA InSight 最后一次公开实测作校核。</p>
+          <p><b>地图</b> 地球 NASA Blue Marble；月球 NASA LRO/LROC；火星 NASA/USGS Viking MDIM21。站点位置按真实经纬度标注。</p>
+        </div>
+      </section>
+    </section>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <span class="emblem small" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="currentColor" stroke-width="1"/><ellipse cx="26" cy="26" rx="22" ry="7.8" transform="rotate(-24 26 26)" fill="none" stroke="currentColor" stroke-width="1.1"/><circle cx="26" cy="26" r="4.2" fill="currentColor"/><circle cx="43.6" cy="15.3" r="2.2" fill="currentColor"/></svg></span>
+        <div><b>太阳系历务与气象总署</b><span>行星时间司 · 行星历法司 · 行星环境中心</span></div>
+      </div>
+      <div class="footer-note">概念演示：机构、站点与人口为虚构设定；时间、轨道、行星地图与天气数据来自公开来源与可复算模型。AI 助手由 GLM-4-Flash 提供。</div>
+      <div class="footer-meta"><span>SSCMA · 2026</span><button class="link-btn" id="footerInfoBtn" type="button">数据与方法</button></div>
+    </footer>
+  </main>
+
+
+  <dialog class="star-dialog" id="starDialog" aria-labelledby="starTitle">
+    <header class="star-head">
+      <div><p class="kicker">LOCATION / 星图</p><h2 id="starTitle">选择地点</h2></div>
+      <button class="icon-btn" id="starClose" type="button" aria-label="关闭星图"><svg class="icon"><use href="#i-close"/></svg></button>
+    </header>
+    <div class="star-worlds" id="starWorlds"></div>
+    <div class="star-map-grid">
+      <div class="star-map"><div class="star-map-bg" id="starMapBg"></div><div class="star-map-markers" id="starMapMarkers"></div></div>
+      <aside class="star-info" id="starInfo"></aside>
+    </div>
+    <p class="star-hint">点击行星切换地图，点击站点完成定位。</p>
+  </dialog>
+  <dialog class="holiday-dialog" id="holidayDialog" aria-labelledby="holidayTitle">
+    <header class="dialog-head"><div><p class="kicker">EARTH HOLIDAY · 三历投影</p><h2 id="holidayTitle">节日</h2></div><button class="icon-btn" id="holidayClose" type="button" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></header>
+    <div class="dialog-body" id="holidayBody"></div>
+  </dialog>
+
+  <div class="drawer-layer" id="infoLayer" hidden>
+    <div class="drawer-backdrop" data-close-info></div>
+    <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+      <header class="drawer-head"><div><p class="kicker">SSCMA / REFERENCE</p><h2 id="infoTitle">数据、口径与方法</h2></div><button class="icon-btn" id="infoClose" type="button" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></header>
+      <div class="drawer-body">
+        <section class="doc-section"><h3>口径</h3><p>全站时间基准为北京时间（UTC+8）。地球历为公历；月球历以新月为月初、十二个朔望月为一年；火星历以太阳黄经每 30° 为一个月，七个火星日为一周。站点真太阳时用于描述当地作业时间，不替代各世界标准时。</p></section>
+        <section class="doc-section"><h3>数据源</h3><ul class="source-list">
+          <li><a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a><span>地球实况、预报与空气质量。</span></li>
+          <li><a href="https://science.nasa.gov/mission/insight/" target="_blank" rel="noopener noreferrer">NASA InSight</a><span>火星最后一批公开气象实测（2020 年存档）。</span></li>
+          <li><a href="https://svs.gsfc.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA SVS / LRO</a><span>月球地图与月相参考。</span></li>
+          <li><a href="https://visibleearth.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Visible Earth</a><span>地球 Blue Marble 地图。</span></li>
+          <li><a href="https://astrogeology.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS Astrogeology</a><span>火星 Viking MDIM21 全球底图。</span></li>
+          <li><a href="https://github.com/cosinekitty/astronomy" target="_blank" rel="noopener noreferrer">Astronomy Engine</a><span>月相、太阳黄经与时间解算（MIT）。</span></li>
+        </ul></section>
+        <section class="doc-section"><h3>模型与边界</h3><p>月球没有常规天气。月面温度为太阳高度与热平衡估算；火星站点温度为简化气候模型，使用真实纬度、海拔、太阳黄经与昼夜周期，未同化实时沙尘观测。所有估算值均标注“模型”，不用于实际任务决策。</p></section>
+        <p class="disclaimer">宇宙日历是概念演示：机构、殖民地、站点名称与人口为虚构；行星地图、轨道与天文数据来自公开来源。AI 助手由 GLM-4-Flash 提供，回答可能有误。</p>
+      </div>
+    </aside>
+  </div>
+
+  <button class="assistant-fab" id="assistantBtn" type="button" aria-haspopup="dialog" aria-controls="assistantDialog"><svg class="icon"><use href="#i-spark"/></svg><span>历务助手</span></button>
+
+  <dialog class="assistant-dialog" id="assistantDialog" aria-labelledby="assistantTitle">
+    <header class="assistant-head">
+      <div class="assistant-id"><span class="assistant-mark" aria-hidden="true"><svg class="icon"><use href="#i-spark"/></svg></span><div><h2 id="assistantTitle">历务助手</h2><p>GLM-4-Flash · 仅回答本站数据</p></div></div>
+      <button class="icon-btn small" id="assistantClose" type="button" aria-label="关闭助手"><svg class="icon"><use href="#i-close"/></svg></button>
+    </header>
+    <div class="assistant-messages" id="assistantMessages" aria-live="polite"></div>
+    <form class="assistant-form" id="assistantForm">
+      <label class="assistant-input"><span class="sr-only">问历务助手</span><input id="assistantInput" type="text" autocomplete="off" placeholder="问一个时间、历法或站点环境问题" maxlength="300"></label>
+      <button class="assistant-send" id="assistantSend" type="submit" aria-label="发送"><svg class="icon"><use href="#i-send"/></svg></button>
+    </form>
+    <p class="assistant-note">AI 生成内容可能有误 · 由 GLM-4-Flash 提供</p>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="noscript">宇宙日历需要 JavaScript 才能计算历法与读取观测。</div></noscript>
+  <script src="js/vendor/astronomy.min.js"></script>
+  <script src="js/astro.js"></script>
+  <script src="js/calendars.js"></script>
+  <script src="js/festivals.js"></script>
+  <script src="js/weather.js"></script>
+  <script src="js/worlds.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/indices.js"></script>
+  <script src="js/assistant.js"></script>
+</body>
+</html>

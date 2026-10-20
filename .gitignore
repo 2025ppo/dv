@@ -1,0 +1,7 @@
+_ref/
+vibe_images/
+dist/
+node_modules/
+*.qoder.site
+*backup*
+tools/node_modules/

@@ -1,0 +1,35 @@
+/* weather scene refinements */
+.weather-panel { min-height: 620px; display: flex; flex-direction: column; background-position: center 68%; }
+.weather-panel[data-world="earth"] { background-position: center 62%; }
+.weather-panel[data-world="moon"] { background-position: center 60%; }
+.weather-panel[data-world="mars"] { background-position: center 73%; }
+.weather-panel .weather-top { margin-top: 10px; }
+.weather-panel .weather-alert { margin-top: 20px; }
+.weather-panel .metric-row { margin-top: 16px; }
+.weather-panel .forecast-more { display: none; }
+.time-panel .panel-head .tag, .calendar-summary .panel-head .tag { display: none; }
+.daily-panel {
+  margin-top: 14px; padding: 16px 20px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 22px;
+  color: var(--ink);
+}
+.daily-panel .panel-head { border-bottom-color: var(--line); color: var(--muted); margin-bottom: 4px; }
+.daily-panel .disclosure { border-top: 0; margin-top: 0; }
+.daily-panel .disclosure summary { padding: 4px 0 8px; color: var(--ink-2); font-size: 9px; }
+.daily-panel .forecast-row { border-top-color: var(--line-2); color: var(--ink-2); padding: 9px 0; }
+.daily-panel .fday, .daily-panel .frange b { color: var(--ink); }
+.daily-panel .fday small { color: var(--muted); }
+.daily-panel .fbar { background: var(--line); }
+.daily-panel .fbar i { background: var(--accent); }
+.daily-panel .frange em { color: var(--muted); }
+.daily-panel .forecast-row .icon { color: var(--ink-2); }
+.daily-panel .source-line { border-top-color: var(--line-2); color: var(--muted); margin-top: 10px; }
+.daily-panel .source-line a { color: var(--ink-2); }
+.daily-panel .forecast-more { border-color: var(--line); background: var(--surface-muted); color: var(--ink-2); }
+.daily-panel .forecast-more:hover { background: var(--accent-soft); color: var(--ink); }
+@media (max-width: 720px) {
+  .weather-panel { min-height: 560px; margin: 0 -12px; width: calc(100% + 24px); padding: 17px 15px 16px; }
+  .weather-panel[data-world="mars"] { background-position: center 62%; }
+  .weather-panel .weather-alert { margin-top: 14px; }
+  .daily-panel { margin-top: 10px; padding: 13px 12px; border-radius: 18px; }
+}

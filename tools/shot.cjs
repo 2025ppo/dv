@@ -1,0 +1,21 @@
+const { chromium } = require('C:/Users/a/AppData/Local/Temp/astrocheck/node_modules/playwright-core');
+(async()=>{
+  const browser = await chromium.launch({ executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: true });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
+  page.on('pageerror', e=>console.log('PAGEERR', e.message));
+  await page.goto('http://127.0.0.1:4173/', {waitUntil:'networkidle'});
+  await page.waitForTimeout(2500);
+  await page.screenshot({path:'_ref/shot-weather-desktop.png', fullPage:false});
+  await page.click('[data-module="calendar"]'); await page.waitForTimeout(700);
+  await page.screenshot({path:'_ref/shot-calendar-desktop.png', fullPage:false});
+  await page.click('[data-module="time"]'); await page.waitForTimeout(700);
+  await page.screenshot({path:'_ref/shot-time-desktop.png', fullPage:false});
+  await page.click('#locationChip'); await page.waitForTimeout(600);
+  await page.screenshot({path:'_ref/shot-starmap.png', fullPage:false});
+  await page.keyboard.press('Escape');
+  await page.setViewportSize({width:390,height:844}); await page.waitForTimeout(800);
+  await page.click('[data-module="weather"]'); await page.waitForTimeout(700);
+  await page.screenshot({path:'_ref/shot-weather-mobile.png', fullPage:false});
+  await browser.close();
+  console.log('shots done');
+})();

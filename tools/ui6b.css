@@ -1,0 +1,151 @@
+
+/* ============================================================
+   v6.1 — 复刻参考稿: 全屏实景 + 磨砂卡片, 图片不加任何遮罩
+   ============================================================ */
+
+/* 实景铺满整个视口, 固定不滚动, 卡片在其上滚动 */
+body:has(#moduleWeather:not([hidden]))::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center 58%;
+  background-repeat: no-repeat;
+  background-image: url("assets/scene-mars.webp");
+}
+html[data-world="moon"] body:has(#moduleWeather:not([hidden]))::before { background-image: url("assets/scene-moon.webp"); }
+html[data-world="earth"] body:has(#moduleWeather:not([hidden]))::before { background-image: url("assets/scene-earth.webp"); }
+body:has(#moduleWeather:not([hidden])) .backdrop { display: none; }
+body:has(#moduleWeather:not([hidden])) { background: #0a0c10; }
+
+/* 顶栏悬浮于实景之上: 半透明工具条, 不是雾 */
+body:has(#moduleWeather:not([hidden])) .site-header {
+  background: rgba(8, 10, 14, .30);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border-bottom: 1px solid rgba(255, 255, 255, .10);
+}
+body:has(#moduleWeather:not([hidden])) .site-header .brand-copy strong,
+body:has(#moduleWeather:not([hidden])) .site-header .brand-copy small,
+body:has(#moduleWeather:not([hidden])) .header-clock time,
+body:has(#moduleWeather:not([hidden])) .header-clock > span:last-child { color: #fff; }
+body:has(#moduleWeather:not([hidden])) .module-tab { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .16); box-shadow: none; }
+body:has(#moduleWeather:not([hidden])) .module-tab .name { color: #fff; }
+body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] { background: rgba(255, 255, 255, .92); }
+body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] .name { color: #14181d; }
+body:has(#moduleWeather:not([hidden])) #locationChip { background: rgba(255, 255, 255, .14) !important; border-color: rgba(255, 255, 255, .22) !important; color: #fff !important; box-shadow: none; }
+body:has(#moduleWeather:not([hidden])) .icon-btn { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .18); color: #fff; }
+
+/* 气象模块通栏, 去掉大标题(参考稿没有) */
+#moduleWeather { width: 100vw; margin-left: calc(50% - 50vw); padding: 10px clamp(16px, 4vw, 48px) 56px; }
+#moduleWeather .module-head, #moduleWeather .module-meta { display: none; }
+
+/* 英雄区: 直接压在实景上, 无面板无遮罩 */
+.weather-panel {
+  background: none !important;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 0;
+  padding: 6px 0 0;
+  color: #fff;
+}
+.weather-panel::before, .weather-panel::after { display: none !important; }
+.weather-top { display: flex; flex-direction: column; gap: 4px; }
+.weather-site { order: -1; border: none; padding: 0; margin-bottom: 6px; flex-direction: row; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.weather-site .label { display: none; }
+.weather-site b { font-size: 26px !important; font-weight: 700; color: #fff; letter-spacing: .02em; text-shadow: 0 2px 22px rgba(0, 0, 0, .38), 0 1px 3px rgba(0, 0, 0, .35); }
+.weather-site small { font-size: 14px !important; color: rgba(255, 255, 255, .82); }
+.weather-site-line { font-size: 14px !important; color: rgba(255, 255, 255, .82); width: 100%; margin-top: 2px; }
+.weather-main .label { display: none; }
+.weather-metric { font-size: clamp(96px, 15vw, 168px) !important; font-weight: 200; line-height: .92; letter-spacing: -.03em; color: #fff; text-shadow: 0 4px 40px rgba(0, 0, 0, .30), 0 2px 6px rgba(0, 0, 0, .28); }
+.weather-metric small { font-size: clamp(28px, 4vw, 44px) !important; font-weight: 200; color: rgba(255, 255, 255, .9); }
+.weather-condition { font-size: 28px !important; font-weight: 700; color: #fff; letter-spacing: .04em; margin-top: 6px; text-shadow: 0 2px 20px rgba(0, 0, 0, .38); }
+.weather-range { font-size: 19px !important; color: rgba(255, 255, 255, .92); margin-top: 6px; text-shadow: 0 1px 12px rgba(0, 0, 0, .4); }
+
+/* 指标 → 磨砂胶囊 chips (参考稿的 空气212 / 沙尘预警) */
+.weather-panel .metric-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 18px 0 0;
+  backdrop-filter: none;
+}
+.weather-panel .metric {
+  background: rgba(255, 255, 255, .16);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 999px;
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.weather-panel .metric + .metric { padding-left: 20px; border-left: 1px solid rgba(255, 255, 255, .16); }
+.weather-panel .metric span { font-size: 14px !important; color: rgba(255, 255, 255, .88); text-transform: none; letter-spacing: .02em; font-weight: 500; }
+.weather-panel .metric b { font-size: 17px !important; color: #fff; font-weight: 700; }
+.weather-panel .metric small { display: none; }
+
+/* 磨砂卡片通用: 警报 / 逐小时 / 多日 */
+#weatherAlert, #weatherForecastWrap, #hourlyPanel, .daily-panel {
+  background: rgba(24, 17, 14, .34);
+  backdrop-filter: blur(24px) saturate(1.25);
+  -webkit-backdrop-filter: blur(24px) saturate(1.25);
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 26px;
+  color: #fff;
+  padding: 22px 24px;
+  margin-top: 18px;
+  box-shadow: 0 12px 44px rgba(0, 0, 0, .20);
+}
+#weatherAlert { border-left: 1px solid rgba(255, 255, 255, .14); font-size: 16px; line-height: 1.7; color: rgba(255, 255, 255, .92); }
+#weatherAlert b { font-size: 19px !important; font-weight: 700; color: #fff; }
+#hourlyPanel .panel-head, .daily-panel .panel-head { border-bottom-color: rgba(255, 255, 255, .14); color: rgba(255, 255, 255, .7); }
+#hourlyPanel .panel-head .panel-title, .daily-panel .panel-head .panel-title { color: #fff; font-size: 19px !important; font-weight: 700; }
+#hourlyPanel .panel-head small, .daily-panel .panel-head small { color: rgba(255, 255, 255, .66); }
+.hour-item { color: #fff; }
+.hour-item span.hour-time { font-size: 14px !important; color: rgba(255, 255, 255, .8); }
+.hour-item b { font-size: 17px !important; color: #fff; font-weight: 700; }
+.hour-item small { font-size: 12px !important; color: rgba(255, 255, 255, .66); }
+.hourly-line { stroke: #fff; }
+.hourly-chart circle { fill: #fff; stroke: transparent; }
+.daily-panel .forecast-row, #weatherForecastWrap .forecast-row { color: rgba(255, 255, 255, .88); border-top-color: rgba(255, 255, 255, .12); }
+.daily-panel .fday, #weatherForecastWrap .fday { color: #fff; font-weight: 600; }
+.daily-panel .fday small, #weatherForecastWrap .fday small { color: rgba(255, 255, 255, .62); }
+.daily-panel .frange b, #weatherForecastWrap .frange b { color: #fff; font-weight: 700; }
+.daily-panel .frange em, #weatherForecastWrap .frange em { color: rgba(255, 255, 255, .66); }
+.daily-panel .fbar, #weatherForecastWrap .fbar { background: rgba(255, 255, 255, .22); }
+.daily-panel .source-line, #weatherForecastWrap .source-line { color: rgba(255, 255, 255, .6); border-top-color: rgba(255, 255, 255, .12); }
+.daily-panel .source-line a, #weatherForecastWrap .source-line a { color: #ffd9b0; }
+.disclosure summary { color: #fff; font-size: 19px !important; font-weight: 700; }
+
+/* 14日按钮: 通栏磨砂 (参考稿 查看近14日天气) */
+.daily-panel .btn, #weatherForecastWrap .btn, .daily-panel .link-btn {
+  width: 100%;
+  min-height: 50px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .16);
+  border: 1px solid rgba(255, 255, 255, .18);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  margin-top: 14px;
+}
+.daily-panel .btn:hover, #weatherForecastWrap .btn:hover { background: rgba(255, 255, 255, .26); color: #fff; }
+
+/* 移动端头部不再重叠 */
+@media (max-width: 760px) {
+  .header-top { display: none; }
+  .header-clock { display: none; }
+  .header-main { flex-wrap: wrap; gap: 10px; }
+  .brand-copy strong { font-size: 20px !important; }
+  #locationChip { min-height: 40px !important; font-size: 14px !important; padding: 0 14px !important; }
+  .weather-site b { font-size: 22px !important; }
+  .weather-condition { font-size: 24px !important; }
+}
