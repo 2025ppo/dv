@@ -1097,7 +1097,17 @@
 
   // ---- star map ----
   function renderStarMap() {
-    if (starWorlds) starWorlds.innerHTML = '';
+    const globalSiteId = state.globalSite;
+    if (starWorlds) starWorlds.innerHTML = ['earth', 'moon', 'mars'].map((w) => {
+      const meta = W.WORLDS[w];
+      const site = W.siteOf(w, w === state.globalWorld ? globalSiteId : (state.weatherSites[w] || W.sitesOf(w)[0].id));
+      const pop = site.population && site.population !== '—' ? `${site.population.toLocaleString('en-US')} 人` : '观测网络';
+      return `<button class="star-world${w === state.globalWorld ? ' active' : ''}" type="button" data-star-world="${w}" data-world="${w}">
+        <span class="star-globe"><img src="assets/planets/${w}.webp" alt=""></span>
+        <span class="star-world-copy"><small>${meta.en}</small><b>${meta.name}</b><em>${pop}</em></span>
+        <span class="star-world-mark">${w === state.globalWorld ? '当前' : '切换'}</span>
+      </button>`;
+    }).join('');
     const meta = W.WORLDS[starWorld];
     starMapBg.style.backgroundImage = `url("${meta.map}")`;
     starMapMarkers.innerHTML = W.sitesOf(starWorld).map((s) => {
@@ -1130,6 +1140,14 @@
   if (starDialog) {
     starDialog.addEventListener('click', (e) => { if (e.target === starDialog) closeDialog(starDialog); });
     starDialog.addEventListener('close', () => { if (!document.querySelector('dialog[open]')) document.body.style.overflow = ''; });
+    if (starWorlds) starWorlds.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-star-world]');
+      if (!b) return;
+      const w = b.dataset.starWorld;
+      const sid = (w === state.globalWorld ? state.globalSite : null) || state.weatherSites[w] || W.sitesOf(w)[0].id;
+      closeDialog(starDialog);
+      applyGlobal(w, sid);
+    });
     starMapMarkers.addEventListener('click', (e) => {
       const b = e.target.closest('[data-star-site]');
       if (!b) return;
