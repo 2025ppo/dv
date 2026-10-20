@@ -725,3 +725,37 @@ body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] .name {
 /* v8.2 修正: 实底规则不能盖掉全屏实景 */
 #moduleWeather .weather-panel { background: none !important; border: none !important; box-shadow: none !important; padding: 6px 0 0 !important; }
 #weatherAlert, #hourlyPanel, #weatherForecastWrap, .daily-panel, .idx-card { background: rgba(22, 22, 24, .80) !important; }
+
+/* v9 地点: 一次到位的地点列表; 模块导航改为常规标签 */
+.star-worlds { display: none !important; }
+.star-map-grid { grid-template-columns: minmax(0, 1.1fr) minmax(300px, 1fr); gap: 16px; padding-top: 16px; }
+.star-info { max-height: 58vh; padding: 10px 12px; }
+.star-group-head { position: sticky; top: -10px; z-index: 1; display: flex; justify-content: space-between; align-items: baseline; padding: 10px 6px 6px; background: #080d15; border-bottom: 1px solid rgba(255,255,255,.08); }
+.star-group-head span { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.78); }
+.star-group-head small { font-size: 11px; color: rgba(255,255,255,.42); }
+.star-site-row { min-height: 52px; padding: 9px 8px; border: none; border-bottom: 1px solid rgba(255,255,255,.06); border-radius: 0; }
+.star-site-row b { font-size: 15px; font-weight: 600; }
+.star-site-row small { font-size: 11px; color: rgba(255,255,255,.5); }
+.module-nav { display: flex; width: 100%; gap: 0; padding: 0; margin: 0 0 10px; background: transparent; border: none; border-bottom: 1px solid var(--line); border-radius: 0; }
+.module-tab { flex: 1 1 0; justify-content: center; min-height: 44px; padding: 0; border: none !important; border-bottom: 2px solid transparent !important; border-radius: 0 !important; background: transparent !important; box-shadow: none !important; }
+.module-tab .name { font-size: 15px; color: var(--muted); letter-spacing: .04em; }
+.module-tab[aria-selected="true"] { border-bottom-color: var(--accent) !important; }
+.module-tab[aria-selected="true"] .name { color: var(--ink); font-weight: 600; }
+body:has(#moduleWeather:not([hidden])) .module-nav { background: transparent !important; border-bottom-color: rgba(255,255,255,.16); }
+body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] { background: transparent !important; border-bottom-color: #fff !important; }
+body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] .name { color: #fff; }
+@media (max-width: 760px) {
+  .module-tab { min-height: 40px !important; }
+  .module-tab .name { font-size: 14px !important; }
+  .star-map-grid { grid-template-columns: 1fr; }
+  .star-info { max-height: 46vh; }
+  .star-site-row { min-height: 50px; }
+}
+
+/* v9.1 亮场景压暗(不改图片结构, 只调色) + 星图更矮 */
+@media (max-width: 760px) { .star-map { aspect-ratio: 21 / 9; } }
+html[data-world="moon"] body:has(#moduleWeather:not([hidden]))::before { filter: brightness(.70) contrast(1.06); }
+html[data-world="earth"] body:has(#moduleWeather:not([hidden]))::before { filter: brightness(.86) contrast(1.04); }
+.weather-condition { text-shadow: 0 2px 8px rgba(0,0,0,.65), 0 4px 26px rgba(0,0,0,.5) !important; }
+.weather-range { text-shadow: 0 1px 5px rgba(0,0,0,.8), 0 2px 16px rgba(0,0,0,.5) !important; }
+.weather-site-line { text-shadow: 0 1px 5px rgba(0,0,0,.8), 0 2px 16px rgba(0,0,0,.5) !important; }
