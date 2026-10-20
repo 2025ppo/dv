@@ -1105,12 +1105,19 @@
       return `<button class="star-marker${active ? ' active' : ''}" type="button" data-star-site="${s.id}" style="left:${Math.max(3, Math.min(97, p.x)).toFixed(2)}%;top:${Math.max(3, Math.min(97, p.y)).toFixed(2)}%" aria-label="${esc(s.name)}"><i></i><span>${esc(s.name)}</span></button>`;
     }).join('');
     const current = W.siteOf(starWorld, starWorld === state.globalWorld ? globalSiteId : W.sitesOf(starWorld)[0].id);
-    starInfo.innerHTML = `<div class="star-info-head"><span>${meta.name}站点</span><span>${meta.standard}</span></div>
+    const quick = ['earth', 'moon', 'mars'].map((w) => {
+      const sid = w === state.globalWorld ? globalSiteId : state.weatherSites[w];
+      const s = W.siteOf(w, sid) || W.sitesOf(w)[0];
+      return `<button class="star-quick${w === state.globalWorld ? ' active' : ''}" type="button" data-quick-world="${w}" data-quick-site="${s.id}"><span>${W.WORLDS[w].name}</span><b>${esc(s.name)}</b></button>`;
+    }).join('');
+    starInfo.innerHTML = `<div class="star-quick-row">${quick}</div>
+      <div class="star-info-head"><span>${meta.name}站点</span><span>${meta.standard}</span></div>
       <div class="star-site-list">${W.sitesOf(starWorld).map((s) => `<button class="star-site-row${s.id === current.id ? ' active' : ''}" type="button" data-star-site="${s.id}">
         <span><b>${esc(s.name)}</b><small>${esc(s.code)} · ${esc(W.coordinate(s))}</small></span>
         <em>${s.population && s.population !== '—' ? s.population.toLocaleString('en-US') + ' 人' : '观测站'}</em>
+        <svg class="icon row-chev"><use href="#i-right"/></svg>
       </button>`).join('')}</div>
-      <p class="star-info-note">${esc(meta.mapCredit)} · 点击站点完成定位。</p>`;
+      <p class="star-info-note">点击任一站点即切换并关闭 · ${esc(meta.mapCredit)}</p>`;
   }
   function openStarMap() {
     starWorld = state.globalWorld;
@@ -1135,6 +1142,12 @@
       applyGlobal(starWorld, b.dataset.starSite);
     });
     starInfo.addEventListener('click', (e) => {
+      const q = e.target.closest('[data-quick-world]');
+      if (q) {
+        closeDialog(starDialog);
+        applyGlobal(q.dataset.quickWorld, q.dataset.quickSite);
+        return;
+      }
       const b = e.target.closest('[data-star-site]');
       if (!b) return;
       closeDialog(starDialog);

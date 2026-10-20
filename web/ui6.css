@@ -452,3 +452,45 @@ body:has(#moduleWeather:not([hidden])) .icon-btn { background: rgba(255, 255, 25
 .idx-svg { width: auto; height: 84px; margin: 0 auto; }
 .idx-card.wide .idx-svg { width: 100%; height: 92px; margin: 0; }
 .idx-card.wide .idx-svg:not(.sq) { max-height: 110px; }
+
+/* v6.6 可读性修复: 手机头部不重叠 + 亮场景文字对比 */
+@media (max-width: 760px) {
+  .header-main { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .brand { flex: 1 1 100%; min-width: 0; }
+  .header-actions { flex: 1 1 100%; justify-content: flex-start; gap: 8px; }
+  #locationChip { flex: 1 1 auto; margin-left: 0; }
+  .site-header { padding-top: 6px; }
+  .module-nav { margin-top: 4px; }
+}
+.weather-panel .metric { background: rgba(18, 12, 9, .62); border-color: rgba(255,255,255,.28); }
+.weather-panel .metric span { color: #fff; font-weight: 600; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.weather-panel .metric b { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+.weather-site-line, .weather-range, .weather-site small { color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.75), 0 2px 14px rgba(0,0,0,.45); }
+.idx-note, .idx-title { color: rgba(255,255,255,.92); }
+.idx-card { background: rgba(14,10,8,.58); }
+#weatherAlert, #weatherForecastWrap, #hourlyPanel { background: rgba(14,10,8,.55); }
+body:has(#moduleWeather:not([hidden])) .site-header { background: rgba(8,10,14,.55); }
+
+/* v6.7 地点切换: 一键快速切换 + 可读的站点行 */
+.star-quick-row { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.12); margin-bottom: 10px; }
+.star-quick { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 8px 10px; min-height: 48px; border-radius: 10px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.06); color: #fff; cursor: pointer; }
+.star-quick span { font-size: 11px; color: rgba(255,255,255,.65); }
+.star-quick b { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.star-quick:hover { background: rgba(255,255,255,.12); border-color: var(--accent); }
+.star-quick.active { border-color: var(--accent); background: var(--accent-soft); }
+.star-site-row { min-height: 46px; padding: 8px 8px; border-radius: 9px; color: #fff; }
+.star-site-row b { font-size: 14px; font-weight: 600; }
+.star-site-row small { font-size: 11px; color: rgba(255,255,255,.6); }
+.star-site-row em { font-size: 11px; }
+.row-chev { width: 16px; height: 16px; color: rgba(255,255,255,.5); flex: none; }
+.star-info-head { font-size: 11px; color: rgba(255,255,255,.6); }
+.star-info-note { font-size: 11px; color: rgba(255,255,255,.55); line-height: 1.5; }
+@media (max-width: 760px) {
+  .star-map { aspect-ratio: 16 / 10; }
+  .star-info { max-height: none; }
+  .star-map-grid { padding: 0 14px; gap: 10px; }
+  .star-site-list { max-height: 210px; overflow: auto; }
+}
+.star-quick { padding: 7px 8px; }
+.star-quick b { font-size: 13px; letter-spacing: 0; }
+.star-quick span { font-size: 10px; letter-spacing: .04em; }
