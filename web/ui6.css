@@ -620,3 +620,108 @@ body:has(#moduleWeather:not([hidden])) .site-header { background: rgba(8,10,14,.
 }
 @media (max-width: 760px) { .mfest { display: none !important; } .day-cell:has(.mfest) .mnum::after { content: ""; display: inline-block; width: 4px; height: 4px; margin-left: 4px; border-radius: 50%; background: var(--accent); vertical-align: middle; } }
 @media (max-width: 760px) { .weather-panel .metric:nth-child(4) { grid-column: 1 / -1; } .weather-panel .metric span, .weather-panel .metric b { white-space: nowrap; } }
+
+/* ============================================================
+   v8 去 AI 味: 平面卡片、无玻璃模糊、移动端标题区归零
+   ============================================================ */
+
+/* 去掉机构副标与发光线 */
+.brand-copy small, .brand-copy em, .header-top { display: none !important; }
+.status-dot { display: none !important; }
+.panel, .idx-card, #weatherAlert, #hourlyPanel, #weatherForecastWrap, .daily-panel {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.panel { background: var(--paper) !important; border: 1px solid var(--line) !important; }
+
+/* 气象页: 顶栏为实底工具条, 不再半透+模糊 */
+body:has(#moduleWeather:not([hidden])) .site-header {
+  background: #101114 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+body:has(#moduleWeather:not([hidden])) .module-tab { background: rgba(255,255,255,.08); box-shadow: none; }
+body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] { background: #f2f2f0; }
+
+/* 卡片: 实底中性灰, 不是玻璃 */
+#weatherAlert, #hourlyPanel, #weatherForecastWrap, .daily-panel {
+  background: rgba(26, 26, 28, .90) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 18px !important;
+}
+.idx-card {
+  background: rgba(26, 26, 28, .90) !important;
+  border: 1px solid rgba(255, 255, 255, .08) !important;
+  border-radius: 18px !important;
+}
+.weather-panel .metric {
+  background: rgba(28, 27, 26, .82) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(255, 255, 255, .10) !important;
+}
+
+/* 移动端: 时间/日历不再有重复大标题, 顶栏再压一档 */
+@media (max-width: 760px) {
+  #moduleTime .module-head, #moduleCalendar .module-head { display: none !important; }
+  .site-header { padding: 4px 10px 0 !important; }
+  .header-main { padding: 0 0 4px !important; gap: 6px !important; }
+  .emblem { width: 22px !important; height: 22px !important; }
+  .brand-copy strong { font-size: 16px !important; }
+  #locationChip { min-height: 32px !important; padding: 0 9px !important; max-width: 172px; }
+  #locationChip .loc-icon { width: 20px; height: 20px; }
+  #locationChip .loc-copy b { font-size: 12.5px !important; }
+  .header-actions .icon-btn { width: 32px !important; height: 32px !important; min-height: 32px !important; }
+  .module-nav { gap: 4px; }
+  .module-tab { min-height: 34px !important; padding: 0 16px !important; }
+  .module-tab .name { font-size: 14px !important; }
+  .page { padding: 4px 14px 24px !important; }
+  .weather-panel .metric:nth-child(4) { grid-column: auto; }
+  .weather-site-line { font-size: 13px !important; }
+  .weather-range { font-size: 17px !important; margin-top: 4px; }
+  .weather-condition { font-size: 26px !important; }
+}
+
+/* ============================================================
+   v8.1 选项卡: 一体化分段控件, 不再三个独立胶囊
+   ============================================================ */
+.module-nav {
+  display: inline-flex; width: auto; align-items: center;
+  gap: 3px; padding: 4px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 2px 0 10px;
+}
+.module-tab {
+  min-height: 36px; padding: 0 20px;
+  border: none !important; border-radius: 9px;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.module-tab .name { font-size: 15px; color: var(--muted); letter-spacing: .04em; }
+.module-tab[aria-selected="true"] { background: var(--paper) !important; }
+.module-tab[aria-selected="true"] .name { color: var(--ink); }
+
+/* 气象页: 同一控件的中性深色版 */
+body:has(#moduleWeather:not([hidden])) .module-nav {
+  background: rgba(255, 255, 255, .07);
+  border-color: rgba(255, 255, 255, .10);
+}
+body:has(#moduleWeather:not([hidden])) .module-tab { background: transparent !important; }
+body:has(#moduleWeather:not([hidden])) .module-tab .name { color: rgba(255, 255, 255, .70); }
+body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] { background: rgba(255, 255, 255, .16) !important; }
+body:has(#moduleWeather:not([hidden])) .module-tab[aria-selected="true"] .name { color: #fff; }
+
+@media (max-width: 760px) {
+  .module-nav { padding: 3px; gap: 2px; border-radius: 10px; margin: 0 0 6px; }
+  .module-tab { min-height: 32px !important; padding: 0 15px !important; border-radius: 8px; }
+  .module-tab .name { font-size: 14px !important; }
+}
+
+/* v8.2 修正: 实底规则不能盖掉全屏实景 */
+#moduleWeather .weather-panel { background: none !important; border: none !important; box-shadow: none !important; padding: 6px 0 0 !important; }
+#weatherAlert, #hourlyPanel, #weatherForecastWrap, .daily-panel, .idx-card { background: rgba(22, 22, 24, .80) !important; }

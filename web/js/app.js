@@ -43,6 +43,8 @@
         theme: state.theme,
         module: state.module,
         cal: state.cal,
+        globalWorld: state.globalWorld,
+        globalSite: state.globalSite,
         timeWorld: state.timeWorld,
         weatherWorld: state.weatherWorld,
         timeSites: state.timeSites,
@@ -675,20 +677,18 @@
       const s = W.marsState(site, jd);
       const m = C.marsFromJd(jd);
       els.weatherWorldLabel.textContent = '火星 · 站点环境';
-      els.weatherLocal.textContent = `${s.condition} · 站点真太阳时 ${s.localTime} · 标准时 ${s.standardTime} MTC`;
+      els.weatherLocal.textContent = `真太阳时 ${s.localTime} · MTC ${s.standardTime}`;
       els.weatherUnit.textContent = '°C';
       els.weatherMetric.textContent = s.tempC.toFixed(0);
       els.weatherCondition.textContent = s.condition;
-      els.weatherRange.textContent = `最高 ${s.maxC.toFixed(0)}° / 最低 ${s.minC.toFixed(0)}° · 太阳黄经 ${s.ls.toFixed(1)}°`;
+      els.weatherRange.textContent = `最高 ${s.maxC.toFixed(0)}° / 最低 ${s.minC.toFixed(0)}°`;
       els.weatherFacts.innerHTML =
         metric('站点风速', `${s.windMps.toFixed(1)} m/s`, '模型估算') +
-        metric('站点气压', `${Math.round(s.pressurePa)} Pa`, site.elev != null ? `海拔 ${site.elev.toLocaleString('en-US')} m` : '') +
-        metric('太阳黄经', `${s.ls.toFixed(1)}°`, `北半球${s.season}`) +
-        metric('火星标准时', `${s.standardTime} MTC`, `站点真太阳时 ${s.localTime}`);
+        metric('站点气压', `${Math.round(s.pressurePa)} Pa`, site.elev != null ? `海拔 ${site.elev.toLocaleString('en-US')} m` : '');
       els.weatherAlert.className = 'weather-alert ' + (s.dustSeason ? 'warn' : 'calm');
       els.weatherAlert.innerHTML = s.dustSeason
-        ? `<b>南半球尘季</b><span>太阳黄经 ${s.ls.toFixed(1)}°，进入南半球尘季。模型显示局地沙尘风险上升；本页未同化实时沙尘观测。</span>`
-        : `<b>非全球尘暴高发期</b><span>太阳黄经 ${s.ls.toFixed(1)}°，当前不在全球尘暴高发期。站点数据为模型估算。</span>`;
+        ? `<b>南半球尘季</b><span>局地沙尘风险上升，本页未同化实时沙尘观测。</span>`
+        : `<b>非全球尘暴高发期</b><span>站点数据为模型估算。</span>`;
       const forecast = W.marsForecast(site, jd, 4);
       const all = forecast.reduce((a, x) => a.concat([x.minC, x.maxC]), []);
       const low = Math.min.apply(null, all), high = Math.max.apply(null, all);
@@ -1017,19 +1017,29 @@
   let starWorld = 'mars';
   let show14 = false;
 
-  // immersive default: Mars, Jezero, dark, weather
-  state.module = 'weather';
-  state.theme = 'dark';
-  document.documentElement.dataset.theme = 'dark';
-  document.documentElement.dataset.world = 'mars';
-  state.globalWorld = 'mars';
-  state.globalSite = 'valles';
-  state.cal = 'mars';
-  state.timeWorld = 'mars';
-  state.weatherWorld = 'mars';
-  state.timeSites.mars = 'valles';
-  state.calSites.mars = 'valles';
-  state.weatherSites.mars = 'valles';
+  // 首次访问用沉浸式默认；此后必须恢复上次的地点与模块
+  const hasPrefs = Object.keys(prefs).length > 0;
+  if (!hasPrefs) {
+    state.module = 'weather';
+    state.theme = 'dark';
+    state.cal = 'mars';
+    state.timeWorld = 'mars';
+    state.weatherWorld = 'mars';
+    state.timeSites.mars = 'valles';
+    state.calSites.mars = 'valles';
+    state.weatherSites.mars = 'valles';
+  }
+  state.globalWorld = validWorld(prefs.globalWorld)
+    ? prefs.globalWorld
+    : (validWorld(state.weatherWorld) ? state.weatherWorld : 'mars');
+  state.globalSite = validSite(state.globalWorld, prefs.globalSite)
+    ? prefs.globalSite
+    : (state.weatherSites[state.globalWorld] || W.sitesOf(state.globalWorld)[0].id);
+  state.timeSites[state.globalWorld] = state.globalSite;
+  state.calSites[state.globalWorld] = state.globalSite;
+  state.weatherSites[state.globalWorld] = state.globalSite;
+  document.documentElement.dataset.theme = state.theme;
+  document.documentElement.dataset.world = state.globalWorld;
 
   function worldIcon(world) { return world === 'earth' ? 'i-earth' : world === 'moon' ? 'i-moon' : 'i-mars'; }
   function locationText() {
@@ -1062,7 +1072,8 @@
     document.documentElement.dataset.cal = state.cal;
   }
   function applyGlobal(world, siteId, quiet) {
-    const site = W.siteOf(world, siteId);
+    if (!validWorld(world)) return;
+    const site = W.siteOf(world, siteId) || W.sitesOf(world)[0];
     state.globalWorld = world;
     state.globalSite = site.id;
     state.timeWorld = world;
@@ -1148,14 +1159,12 @@
     calTypeRow.addEventListener('click', (e) => {
       const b = e.target.closest('[data-cal]');
       if (!b) return;
-      state.cal = b.dataset.cal;
-      const siteId = state.cal === state.globalWorld ? state.globalSite : W.sitesOf(state.cal)[0].id;
-      state.calSites[state.cal] = siteId;
-      if (els.calendarSelect) els.calendarSelect.value = state.cal;
-      if (els.calendarSite) populateSiteSelect(els.calendarSite, state.cal, siteId);
-      renderCalendar(true);
-      syncImmersiveChrome();
-      savePrefs();
+      const cal = b.dataset.cal;
+      if (!validWorld(cal)) return;
+      const siteId = (cal === state.globalWorld ? state.globalSite : null)
+        || state.calSites[cal]
+        || W.sitesOf(cal)[0].id;
+      applyGlobal(cal, siteId, true);
     });
   }
 
